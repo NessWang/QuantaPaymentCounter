@@ -71,6 +71,7 @@ def start_shutdown_timer():
             shutdown_after_id = None
             shutdown_label.config(text="倒數結束")
             set_led_color('gray')
+            tk_obj.quit()  # 自動關閉視窗（或用 tk_obj.after(0, tk_obj.destroy)）
             return
         color = 'red' if countdown % 2 == 0 else 'white'
         set_led_color(color)
