@@ -3,7 +3,7 @@ from tkinter import ttk
 import time
 
 # 工資相關計算
-payment = #在此輸入薪資
+payment = 0 #在此輸入月薪金額
 paymentday = payment / 22
 paymenthour = paymentday / 9
 paymentmin = paymenthour / 60
@@ -243,6 +243,28 @@ def start_all():
     update_countdown()
     update_money()
 
+#檢查有無輸入Payment
+def check_payment():
+    try:
+        if float(payment) <= 0:
+            raise ValueError
+    except:
+        warning_win = Toplevel()
+        warning_win.title("警告")
+        warning_win.geometry("280x120")
+        warning_win.resizable(False, False)
+        warning_win.config(bg="white")
+        warning_win.iconbitmap('Dog.ico')
+
+        Label(warning_win, text="⚠ 請先正確設定月薪金額！", font=("微軟正黑體", 12), fg="red", bg="white").pack(pady=20)
+
+        Button(warning_win, text="關閉", font=("微軟正黑體", 10), width=10,
+               bg="#d32f2f", fg="white", command=warning_win.destroy).pack()
+
+        # 暫停主視窗直到使用者關閉此視窗
+        warning_win.transient(tk_obj)
+        warning_win.grab_set()
+        tk_obj.wait_window(warning_win)
 # GUI
 tk_obj = Tk()
 tk_obj.geometry('400x400')
@@ -345,4 +367,5 @@ def update_cross_day_label():
 
 update_cross_day_label()
 refresh_current_time()
+check_payment()  # 啟動前檢查 payment 是否正確
 tk_obj.mainloop()
