@@ -331,7 +331,7 @@ tk_obj = Tk()
 tk_obj.geometry('400x400')
 tk_obj.resizable(0, 0)
 tk_obj.config(bg='white')
-tk_obj.title('倒數計時應用')
+tk_obj.title('廣達下班倒數計時')
 tk_obj.iconbitmap('Dog.ico')  # 請自行放置icon路徑或註解此行
 
 # 美化圓形指示燈，改用 Canvas
@@ -430,6 +430,3 @@ update_cross_day_label()
 refresh_current_time()
 check_payment()  # 啟動前檢查 payment 是否正確
 tk_obj.mainloop()
-
-
-# 在這裡開始你的主程式邏輯，例如開啟 tkinter UI 等...
