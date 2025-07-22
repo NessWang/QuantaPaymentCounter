@@ -2,6 +2,7 @@ import tkinter as tk
 from tkinter import messagebox
 import os
 import sys
+import subprocess
 
 # ==== Step 1: 預設月薪設定為 None（系統會自動更新此行） ====
 payment = None  # 自動寫入月薪
@@ -28,15 +29,16 @@ if payment is None:
             if entered_value <= 0:
                 raise ValueError
             set_payment_in_code(entered_value)
-            messagebox.showinfo("設定完成", "月薪已寫入程式，下次執行會自動套用。\n請重新啟動程式。")
+#            messagebox.showinfo("設定完成", "月薪已寫入程式，下次執行會自動套用。\n請重新啟動程式。") #不需要顯示了
             root.destroy()
-            sys.exit()
+            subprocess.Popen([sys.executable] + sys.argv, shell=True)
         except ValueError:
-            messagebox.showerror("輸入錯誤", "請輸入正整數月薪")
+            messagebox.showerror("輸入錯誤", "請輸入正整數底薪")
 
     root = tk.Tk()
-    root.title("首次執行 - 請輸入月薪")
+    root.title("首次執行 - 請輸入底薪")
     root.geometry("300x120")
+    root.iconbitmap('Dog.ico')
 
     label = tk.Label(root, text="請輸入你的月薪（整數）：")
     label.pack(pady=5)
@@ -47,6 +49,7 @@ if payment is None:
 
     submit_button = tk.Button(root, text="確認", command=on_submit)
     submit_button.pack(pady=5)
+    root.bind('<Return>', lambda event: on_submit())
 
     root.mainloop()
     sys.exit()
