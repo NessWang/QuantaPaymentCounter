@@ -235,8 +235,10 @@ def refresh_current_time():
     tk_obj.after(1000, refresh_current_time)
 
 def set_overtime(hour, button):
-    global overtime_hours, selected_ot_button
+    global overtime_hours, selected_ot_button, has_ended, last_progress
     overtime_hours = hour
+    has_ended = False
+    last_progress = 0
     if selected_ot_button:
         selected_ot_button.config(bg='#388e3c')
     button.config(bg='#2e7d32')
