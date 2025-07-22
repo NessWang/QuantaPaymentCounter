@@ -4,32 +4,46 @@ import os
 import sys
 import subprocess
 
-# ==== Step 1: 預設月薪設定為 None（系統會自動更新此行） ====
-payment = None  # 自動寫入月薪
+CONFIG_FILE = 'config.txt'
 
-# ==== Step 2: 自我修改程式碼寫入薪資 ====
-def set_payment_in_code(new_payment):
-    script_path = os.path.abspath(__file__)
-    with open(script_path, 'r', encoding='utf-8') as file:
-        lines = file.readlines()
+def resource_path(relative_path):
+    """取得資源的絕對路徑，支援開發與打包執行"""
+    try:
+        # PyInstaller 解壓後的臨時資料夾
+        base_path = sys._MEIPASS
+    except AttributeError:
+        # 開發時的資料夾
+        base_path = os.path.abspath(".")
 
-    for i, line in enumerate(lines):
-        if line.strip().startswith('payment = None'):
-            lines[i] = f'payment = {new_payment}  # 自動寫入月薪\n'
-            break
+    return os.path.join(base_path, relative_path)
 
-    with open(script_path, 'w', encoding='utf-8') as file:
-        file.writelines(lines)
+# ==== Step 1: 從 config.txt 讀取月薪 ====
+def read_payment():
+    if not os.path.exists(CONFIG_FILE):
+        return None
+    try:
+        with open(CONFIG_FILE, 'r', encoding='utf-8') as f:
+            for line in f:
+                if line.startswith("payment="):
+                    return int(line.strip().split('=')[1])
+    except:
+        return None
 
-# ==== Step 3: 如果沒設定月薪，跳出視窗輸入 ====
-if payment is None:
+# ==== Step 2: 寫入月薪到 config.txt ====
+def write_payment(new_payment):
+    with open(CONFIG_FILE, 'w', encoding='utf-8') as f:
+        f.write(f"payment={new_payment}\n")
+
+# ==== Step 3: 若未設定，跳出視窗輸入 ====
+payment = read_payment()
+
+if payment is None or payment <= 0:
     def on_submit():
         try:
             entered_value = int(entry.get())
             if entered_value <= 0:
                 raise ValueError
-            set_payment_in_code(entered_value)
-#            messagebox.showinfo("設定完成", "月薪已寫入程式，下次執行會自動套用。\n請重新啟動程式。") #不需要顯示了
+            write_payment(entered_value)
             root.destroy()
             subprocess.Popen([sys.executable] + sys.argv, shell=True)
         except ValueError:
@@ -38,7 +52,7 @@ if payment is None:
     root = tk.Tk()
     root.title("首次執行 - 請輸入底薪")
     root.geometry("300x120")
-    root.iconbitmap('Dog.ico')
+    root.iconbitmap(resource_path("assets/Dog.ico"))
 
     label = tk.Label(root, text="請輸入你的月薪（整數）：")
     label.pack(pady=5)
@@ -315,7 +329,7 @@ def check_payment():
         warning_win.geometry("280x120")
         warning_win.resizable(False, False)
         warning_win.config(bg="white")
-        warning_win.iconbitmap('Dog.ico')
+        warning_win.iconbitmap(resource_path("assets/Dog.ico"))
 
         Label(warning_win, text="⚠ 請先正確設定月薪金額！", font=("微軟正黑體", 12), fg="red", bg="white").pack(pady=20)
 
@@ -332,7 +346,8 @@ tk_obj.geometry('400x400')
 tk_obj.resizable(0, 0)
 tk_obj.config(bg='white')
 tk_obj.title('廣達下班倒數計時')
-tk_obj.iconbitmap('Dog.ico')  # 請自行放置icon路徑或註解此行
+tk_obj.iconbitmap(resource_path("assets/Dog.ico"))  # 請自行放置icon路徑或註解此行
+
 
 # 美化圓形指示燈，改用 Canvas
 led_canvas = Canvas(tk_obj, width=20, height=20, bg='white', highlightthickness=0)
