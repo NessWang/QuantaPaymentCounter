@@ -1,1 +1,1 @@
-py MoneyTimer.py
+py main.py

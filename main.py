@@ -1,9 +1,63 @@
+import tkinter as tk
+from tkinter import messagebox
+import os
+import sys
+
+# ==== Step 1: 預設月薪設定為 None（系統會自動更新此行） ====
+payment = None  # 自動寫入月薪
+
+# ==== Step 2: 自我修改程式碼寫入薪資 ====
+def set_payment_in_code(new_payment):
+    script_path = os.path.abspath(__file__)
+    with open(script_path, 'r', encoding='utf-8') as file:
+        lines = file.readlines()
+
+    for i, line in enumerate(lines):
+        if line.strip().startswith('payment = None'):
+            lines[i] = f'payment = {new_payment}  # 自動寫入月薪\n'
+            break
+
+    with open(script_path, 'w', encoding='utf-8') as file:
+        file.writelines(lines)
+
+# ==== Step 3: 如果沒設定月薪，跳出視窗輸入 ====
+if payment is None:
+    def on_submit():
+        try:
+            entered_value = int(entry.get())
+            if entered_value <= 0:
+                raise ValueError
+            set_payment_in_code(entered_value)
+            messagebox.showinfo("設定完成", "月薪已寫入程式，下次執行會自動套用。\n請重新啟動程式。")
+            root.destroy()
+            sys.exit()
+        except ValueError:
+            messagebox.showerror("輸入錯誤", "請輸入正整數月薪")
+
+    root = tk.Tk()
+    root.title("首次執行 - 請輸入月薪")
+    root.geometry("300x120")
+
+    label = tk.Label(root, text="請輸入你的月薪（整數）：")
+    label.pack(pady=5)
+
+    entry = tk.Entry(root)
+    entry.pack(pady=5)
+    entry.focus()
+
+    submit_button = tk.Button(root, text="確認", command=on_submit)
+    submit_button.pack(pady=5)
+
+    root.mainloop()
+    sys.exit()
+
+# ==== Step 4: 接下來寫你原本的主程式 ====
+
 from tkinter import *
 from tkinter import ttk
 import time
 
 # 工資相關計算
-payment = 0 #在此輸入月薪金額
 paymentday = payment / 22
 paymenthour = paymentday / 9
 paymentmin = paymenthour / 60
@@ -373,3 +427,6 @@ update_cross_day_label()
 refresh_current_time()
 check_payment()  # 啟動前檢查 payment 是否正確
 tk_obj.mainloop()
+
+
+# 在這裡開始你的主程式邏輯，例如開啟 tkinter UI 等...
