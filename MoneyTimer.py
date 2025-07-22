@@ -27,6 +27,7 @@ selected_ot_button = None  # 紀錄目前選的按鈕
 shutdown_counting = False
 shutdown_after_id = None
 flag1 = flag2 = flag3 = False
+last_progress = 0  # 避免進度條歸零
 
 FONT_DEFAULT = ("微軟正黑體", 12)
 FONT_BOLD = ("微軟正黑體", 15, "bold")
@@ -90,16 +91,16 @@ def stop_shutdown_timer():
     set_led_color('green')
 
 def update_countdown():
-    global has_ended, flag1, flag2, flag3
+    global has_ended, flag1, flag2, flag3, last_progress
     if not has_started or has_ended:
-        progress_var.set(0)
-        return
+        return  # 不重設進度條為0，避免閃爍
+
     now = time.time()
     off_time, up_time = get_work_and_off_times()
     if off_time is None or up_time is None:
         down_label.config(text="時間格式錯誤")
-        progress_var.set(0)
         return
+
     diff = int(off_time - now) + 1
 
     if diff == 3:
@@ -116,6 +117,7 @@ def update_countdown():
         down_label.config(text="已到下班時間")
         has_ended = True
         progress_var.set(100)
+        last_progress = 100
         set_led_color('gray')
     else:
         h = diff // 3600
@@ -128,7 +130,9 @@ def update_countdown():
             elapsed_sec = 0
         progress = int((elapsed_sec / total_sec) * 100) if total_sec > 0 else 0
         progress = min(progress, 100)
-        progress_var.set(progress)
+        if progress != last_progress:
+            progress_var.set(progress)
+            last_progress = progress
         set_led_color('green')
         tk_obj.after(1000, update_countdown)
 
