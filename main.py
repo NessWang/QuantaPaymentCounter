@@ -218,6 +218,7 @@ def update_money():
     diffup_time = now - up_time
     if diffup_time < 0:
         money_label.config(text="$0.00")
+        per_sec_label.config(text=f"${paymentsec:.3f}/sec")
     else:
         if diffup_time > 41400:
             money = paymentday + paymentadd33day + (diffup_time - 41400) * paymentadd66sec
@@ -228,6 +229,7 @@ def update_money():
         else:
             money = diffup_time * paymentsec
         money_label.config(text=f"${money:.2f}")
+        per_sec_label.config(text=f"${paymentsec:.3f}/sec")
         tk_obj.after(100, update_money)
 
 def refresh_current_time():
@@ -405,6 +407,9 @@ down_label.place(x=160, y=160)
 Label(tk_obj, font=FONT_BOLD, text='今日錢錢：', bg='white').place(x=50, y=195)
 money_label = Label(tk_obj, font=("微軟正黑體", 16), text='$0.00', fg='gray25', bg='white')
 money_label.place(x=160, y=195)
+# 新增「每秒賺多少錢」顯示
+per_sec_label = Label(tk_obj, font=("微軟正黑體", 10), text='$0.000/sec', fg='gray40', bg='white')
+per_sec_label.place(x=270, y=205)
 
 Label(tk_obj, text='加班：', font=FONT_BOLD, bg='white').place(x=50, y=230)
 btn_frame = Frame(tk_obj, bg='white')
