@@ -1,3 +1,6 @@
+#製作exe檔指令：
+#pyinstaller main.py --onedir --icon=assets/Dog.ico --add-data "assets;assets"
+
 import tkinter as tk
 from tkinter import messagebox
 import os
