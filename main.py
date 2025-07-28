@@ -227,11 +227,11 @@ def update_money():
     elif diffup_time > 41400:
         money = paymentday + paymentadd33day + (diffup_time - 41400) * paymentadd66sec
         rate = paymentadd66sec
-        label_suffix = "1.66x"
+        label_suffix = ""
     elif diffup_time > 34200:
         money = paymentday + (diffup_time - 34200) * paymentadd33sec
         rate = paymentadd33sec
-        label_suffix = "1.33x"
+        label_suffix = ""
     elif diffup_time > 32400:
         money = paymentday
         rate = 0
