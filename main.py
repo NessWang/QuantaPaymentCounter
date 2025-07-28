@@ -255,9 +255,11 @@ def set_overtime(hour, button):
     overtime_hours = hour
     has_ended = False
     last_progress = 0
+    # 將之前選的按鈕還原顏色
     if selected_ot_button:
-        selected_ot_button.config(bg='#388e3c')
-    button.config(bg='#2e7d32')
+        selected_ot_button.config(bg='#4CAF50')
+    # 把目前選的按鈕設成深綠色
+    button.config(bg='#00e600')
     selected_ot_button = button
 
     try:
@@ -288,7 +290,7 @@ def clean_and_start():
     stop_shutdown_timer()  # 停止倒數關閉紅燈閃爍，指示燈變綠
 
     if selected_ot_button:
-        selected_ot_button.config(bg='#388e3c')
+        selected_ot_button.config(bg='#4CAF50')
     selected_ot_button = None
     try:
         wuh = int(workup_hour.get())
@@ -449,13 +451,13 @@ for i, h in enumerate(ot_hours):
         return lambda: set_overtime(hh, ot_buttons[btn_idx])
     btn = Button(btn_frame, text=f"+{h}h", width=5,
                  font=FONT_BUTTON,
-                 bg='#388e3c', fg='white', relief='flat')
+                 bg='#4CAF50', fg='white', relief='flat')
     btn.config(command=make_lambda())
     btn.grid(row=i // 4, column=i % 4, padx=2, pady=2)
     ot_buttons.append(btn)
 
 start_btn = Button(tk_obj, text='START', bd=5, command=start_all,
-                   bg='#388e3c', fg='white', font=FONT_BUTTON, relief='flat')
+                   bg='#4CAF50', fg='white', font=FONT_BUTTON, relief='flat')
 start_btn.place(x=140, y=310)
 
 clean_btn = Button(tk_obj, text='CLEAN', bd=5, command=clean_and_start,
