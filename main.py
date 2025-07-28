@@ -1,5 +1,5 @@
 #製作exe檔指令：
-#pyinstaller main.py --onedir --icon=assets/Dog.ico --add-data "assets;assets"
+#pyinstaller main.py --onedir --noconsole --icon=assets/Dog.ico --add-data "assets;assets"
 
 import tkinter as tk
 from tkinter import messagebox
@@ -102,6 +102,7 @@ shutdown_counting = False
 shutdown_after_id = None
 flag1 = flag2 = flag3 = False
 last_progress = 0  # 避免進度條歸零
+show_per_sec = True  # 預設顯示
 
 FONT_DEFAULT = ("微軟正黑體", 12)
 FONT_BOLD = ("微軟正黑體", 15, "bold")
@@ -220,20 +221,30 @@ def update_money():
         return
     diffup_time = now - up_time
     if diffup_time < 0:
-        money_label.config(text="$0.00")
-        per_sec_label.config(text=f"${paymentsec:.3f}/sec")
+        money = 0
+        rate = 0
+        label_suffix = ""
+    elif diffup_time > 41400:
+        money = paymentday + paymentadd33day + (diffup_time - 41400) * paymentadd66sec
+        rate = paymentadd66sec
+        label_suffix = "1.66x"
+    elif diffup_time > 34200:
+        money = paymentday + (diffup_time - 34200) * paymentadd33sec
+        rate = paymentadd33sec
+        label_suffix = "1.33x"
+    elif diffup_time > 32400:
+        money = paymentday
+        rate = 0
+        label_suffix = ""
     else:
-        if diffup_time > 41400:
-            money = paymentday + paymentadd33day + (diffup_time - 41400) * paymentadd66sec
-        elif diffup_time > 34200:
-            money = paymentday + (diffup_time - 34200) * paymentadd33sec
-        elif diffup_time > 32400:
-            money = paymentday
-        else:
-            money = diffup_time * paymentsec
-        money_label.config(text=f"${money:.2f}")
-        per_sec_label.config(text=f"${paymentsec:.3f}/sec")
-        tk_obj.after(100, update_money)
+        money = diffup_time * paymentsec
+        rate = paymentsec
+        label_suffix = ""
+
+    money_label.config(text=f"${money:.2f}")
+    if show_per_sec:
+        per_sec_label.config(text=f"${rate:.2f}/sec {label_suffix}")
+    tk_obj.after(100, update_money)
 
 def refresh_current_time():
     curr_time.config(text=time.strftime('%Y-%m-%d %H:%M:%S'))
@@ -411,8 +422,21 @@ Label(tk_obj, font=FONT_BOLD, text='今日錢錢：', bg='white').place(x=50, y=
 money_label = Label(tk_obj, font=("微軟正黑體", 16), text='$0.00', fg='gray25', bg='white')
 money_label.place(x=160, y=195)
 # 新增「每秒賺多少錢」顯示
-per_sec_label = Label(tk_obj, font=("微軟正黑體", 10), text='$0.000/sec', fg='gray40', bg='white')
+per_sec_label = Label(tk_obj, font=("微軟正黑體", 10), text='$0.00/sec', fg='gray40', bg='white')
 per_sec_label.place(x=270, y=205)
+
+def toggle_per_sec():
+    global show_per_sec
+    show_per_sec = not show_per_sec
+    if show_per_sec:
+        per_sec_label.place(x=270, y=205)  # 再放回去
+        toggle_btn.config(text='隱藏每秒')
+    else:
+        per_sec_label.place_forget()  # 隱藏
+        toggle_btn.config(text='顯示每秒')
+
+toggle_btn = Button(tk_obj, text='隱藏每秒', font=("微軟正黑體", 8), command=toggle_per_sec)
+toggle_btn.place(x=342, y=204)
 
 Label(tk_obj, text='加班：', font=FONT_BOLD, bg='white').place(x=50, y=230)
 btn_frame = Frame(tk_obj, bg='white')
