@@ -7,8 +7,6 @@ import os
 import sys
 import subprocess
 
-CONFIG_FILE = 'config.txt'
-
 def resource_path(relative_path):
     """取得資源的絕對路徑，支援開發與打包執行"""
     try:
@@ -20,6 +18,7 @@ def resource_path(relative_path):
 
     return os.path.join(base_path, relative_path)
 
+CONFIG_FILE = resource_path('config.txt')
 # ==== Step 1: 從 config.txt 讀取月薪 ====
 def read_payment():
     if not os.path.exists(CONFIG_FILE):
