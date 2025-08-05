@@ -161,6 +161,7 @@ def stop_shutdown_timer():
         tk_obj.after_cancel(shutdown_after_id)
         shutdown_after_id = None
     shutdown_counting = False
+    flag1 = flag2 = flag3 = False
     shutdown_label.config(text="")
     set_led_color('green')
 
@@ -251,6 +252,7 @@ def refresh_current_time():
 
 def set_overtime(hour, button):
     global overtime_hours, selected_ot_button, has_ended, last_progress
+    stop_shutdown_timer()  # <<< 停止倒數關閉
     overtime_hours = hour
     has_ended = False
     last_progress = 0
