@@ -393,7 +393,7 @@ hour_choices = [f"{h:02d}" for h in range(7, 18)]  # 上班時段7~17點
 minute_choices = [f"{m:02d}" for m in range(60)]
 ttk.Combobox(tk_obj, textvariable=workup_hour, values=hour_choices, width=3, state='readonly', font=FONT_DEFAULT).place(x=160, y=90)
 ttk.Combobox(tk_obj, textvariable=workup_minute, values=minute_choices, width=3, state='readonly', font=FONT_DEFAULT).place(x=205, y=90)
-workup_hour.set('09')
+workup_hour.set('07')
 workup_minute.set('00')
 
 Label(tk_obj, font=FONT_BOLD, text='下班時間：', bg='white').place(x=50, y=120)
@@ -410,7 +410,7 @@ cb_wm = ttk.Combobox(tk_obj, textvariable=work_minute, values=minute_choices, wi
 cb_wm.place(x=205, y=125)
 cb_wm.bind("<<ComboboxSelected>>", lambda e: start_all())
 
-work_hour.set('18')
+work_hour.set('16')
 work_minute.set('00')
 
 # 跨日提示
