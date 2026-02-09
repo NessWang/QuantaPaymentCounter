@@ -102,6 +102,7 @@ shutdown_after_id = None
 flag1 = flag2 = flag3 = False
 last_progress = 0  # 避免進度條歸零
 show_per_sec = True  # 預設顯示
+turbo_mode = False #星期六加班模式
 
 FONT_DEFAULT = ("微軟正黑體", 12)
 FONT_BOLD = ("微軟正黑體", 15, "bold")
@@ -220,6 +221,22 @@ def update_money():
     if off_time is None or up_time is None:
         return
     diffup_time = now - up_time
+    # ===== Turbo mode：整天 2.0 倍 =====
+    if turbo_mode:
+        if diffup_time < 0:
+            money = 0
+            rate = 0
+        else:
+            turbo_sec_rate = (payment / 240) * 2.0 / 3600
+            money = diffup_time * turbo_sec_rate
+            rate = turbo_sec_rate
+
+        money_label.config(text=f"${money:.2f}")
+        if show_per_sec:
+            per_sec_label.config(text=f"${rate:.2f}/sec")
+        tk_obj.after(100, update_money)
+        return
+    # ===== Normal mode：平日算法 =====
     if diffup_time < 0:
         money = 0
         rate = 0
@@ -282,6 +299,32 @@ def set_overtime(hour, button):
     work_hour.set(f"{new_off_struct.tm_hour:02d}")
     work_minute.set(f"{new_off_struct.tm_min:02d}")
     start_all()  # 加班時間改變後自動重啟
+
+def toggle_turbo():
+    global turbo_mode
+
+    # 若要開啟 Turbo mode，先確認
+    if not turbo_mode:
+        result = messagebox.askyesno(
+            "警告",
+            "週六加班有害健康，是否確定執行？"
+        )
+        if not result:
+            return  # 使用者選否，什麼都不做
+
+        turbo_mode = True
+        turbo_btn.config(
+            text="Turbo mode",
+            bg="#c62828"
+        )
+    else:
+        # 關閉不需要確認
+        turbo_mode = False
+        turbo_btn.config(
+            text="Turbo mode",
+            bg="#455a64"
+        )
+
 
 def clean_and_start():
     global overtime_hours, has_started, has_ended, selected_ot_button
@@ -367,7 +410,7 @@ def check_payment():
         tk_obj.wait_window(warning_win)
 # GUI
 tk_obj = Tk()
-tk_obj.geometry('400x400')
+tk_obj.geometry('400x430')
 tk_obj.resizable(0, 0)
 tk_obj.config(bg='white')
 tk_obj.title('廣達下班倒數計時')
@@ -476,18 +519,28 @@ for i, h in enumerate(ot_hours):
 
     btn.grid(row=row, column=col, padx=2, pady=2)
     ot_buttons.append(btn)
-
+    turbo_btn = Button(
+    tk_obj,
+    text="Turbo mode",
+    font=FONT_BUTTON,
+    width=10,
+    bg="#455a64",
+    fg="white",
+    relief="flat",
+    command=toggle_turbo
+)
+turbo_btn.place(x=112, y=300)
 start_btn = Button(tk_obj, text='START', bd=5, command=start_all,
                    bg='#4CAF50', fg='white', font=FONT_BUTTON, relief='flat')
-start_btn.place(x=140, y=310)
+start_btn.place(x=140, y=340)
 
 clean_btn = Button(tk_obj, text='CLEAN', bd=5, command=clean_and_start,
                    bg='#f57c00', fg='white', font=FONT_BUTTON, relief='flat')
-clean_btn.place(x=220, y=310)
+clean_btn.place(x=220, y=340)
 
 progress_var = IntVar()
 progress_bar = ttk.Progressbar(tk_obj, orient=HORIZONTAL, length=300, mode='determinate', variable=progress_var)
-progress_bar.place(x=60, y=360)
+progress_bar.place(x=60, y=390)
 
 def update_cross_day_label():
     # 判斷是否跨日
