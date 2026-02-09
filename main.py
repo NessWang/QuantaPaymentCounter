@@ -410,7 +410,7 @@ def check_payment():
         tk_obj.wait_window(warning_win)
 # GUI
 tk_obj = Tk()
-tk_obj.geometry('400x430')
+tk_obj.geometry('365x430')
 tk_obj.resizable(0, 0)
 tk_obj.config(bg='white')
 tk_obj.title('廣達下班倒數計時')
@@ -419,42 +419,42 @@ tk_obj.iconbitmap(resource_path("assets/Dog.ico"))  # 請自行放置icon路徑�
 
 # 美化圓形指示燈，改用 Canvas
 led_canvas = Canvas(tk_obj, width=20, height=20, bg='white', highlightthickness=0)
-led_canvas.place(x=10, y=10)
+led_canvas.place(x=17, y=10)
 led_circle = led_canvas.create_oval(2, 2, 18, 18, fill='green', outline='gray')
 
 def set_led_color(color):
     led_canvas.itemconfig(led_circle, fill=color)
 
 shutdown_label = Label(tk_obj, text='', font=('微軟正黑體', 10), fg='red', bg='white')
-shutdown_label.place(x=35, y=8)
+shutdown_label.place(x=0, y=8)
 
 Label(tk_obj, text='下班倒數計時', font=FONT_BOLD_LARGE, bg='white').pack()
-Label(tk_obj, font=FONT_BOLD, text='當前時間：', bg='white').place(x=50, y=50)
+Label(tk_obj, font=FONT_BOLD, text='當前時間：', bg='white').place(x=15, y=50)
 curr_time = Label(tk_obj, font=FONT_DEFAULT, text='', fg='gray25', bg='white')
-curr_time.place(x=160, y=50)
+curr_time.place(x=120, y=52)
 
-Label(tk_obj, font=FONT_BOLD, text='上班時間：', bg='white').place(x=50, y=85)
+Label(tk_obj, font=FONT_BOLD, text='上班時間：', bg='white').place(x=15, y=85)
 workup_hour = StringVar()
 workup_minute = StringVar()
 hour_choices = [f"{h:02d}" for h in range(7, 18)]  # 上班時段7~17點
 minute_choices = [f"{m:02d}" for m in range(60)]
-ttk.Combobox(tk_obj, textvariable=workup_hour, values=hour_choices, width=3, state='readonly', font=FONT_DEFAULT).place(x=160, y=90)
-ttk.Combobox(tk_obj, textvariable=workup_minute, values=minute_choices, width=3, state='readonly', font=FONT_DEFAULT).place(x=205, y=90)
+ttk.Combobox(tk_obj, textvariable=workup_hour, values=hour_choices, width=3, state='readonly', font=FONT_DEFAULT).place(x=125, y=90)
+ttk.Combobox(tk_obj, textvariable=workup_minute, values=minute_choices, width=3, state='readonly', font=FONT_DEFAULT).place(x=170, y=90)
 workup_hour.set('07')
 workup_minute.set('00')
 
-Label(tk_obj, font=FONT_BOLD, text='下班時間：', bg='white').place(x=50, y=120)
+Label(tk_obj, font=FONT_BOLD, text='下班時間：', bg='white').place(x=15, y=120)
 work_hour = StringVar()
 work_minute = StringVar()
 hour_choices_full = [f"{h:02d}" for h in range(7, 24)] + ['00']  # 下班時段7~23點 + 00(隔日)
 
 # 下班時間時、分 Combobox 改成變數，並綁定事件觸發 start_all
 cb_wh = ttk.Combobox(tk_obj, textvariable=work_hour, values=hour_choices_full, width=3, state='readonly', font=FONT_DEFAULT)
-cb_wh.place(x=160, y=125)
+cb_wh.place(x=125, y=125)
 cb_wh.bind("<<ComboboxSelected>>", lambda e: start_all())
 
 cb_wm = ttk.Combobox(tk_obj, textvariable=work_minute, values=minute_choices, width=3, state='readonly', font=FONT_DEFAULT)
-cb_wm.place(x=205, y=125)
+cb_wm.place(x=170, y=125)
 cb_wm.bind("<<ComboboxSelected>>", lambda e: start_all())
 
 work_hour.set('16')
@@ -462,35 +462,35 @@ work_minute.set('00')
 
 # 跨日提示
 cross_day_label = Label(tk_obj, font=("微軟正黑體", 10), text="", fg='red', bg='white')
-cross_day_label.place(x=270, y=130)
+cross_day_label.place(x=235, y=130)
 
-Label(tk_obj, font=FONT_BOLD, text='剩餘時間：', bg='white').place(x=50, y=160)
+Label(tk_obj, font=FONT_BOLD, text='剩餘時間：', bg='white').place(x=15, y=160)
 down_label = Label(tk_obj, font=("微軟正黑體", 16), text='00時00分00秒', fg='gray25', bg='white')
-down_label.place(x=160, y=160)
+down_label.place(x=125, y=160)
 
-Label(tk_obj, font=FONT_BOLD, text='今日錢錢：', bg='white').place(x=50, y=195)
+Label(tk_obj, font=FONT_BOLD, text='今日錢錢：', bg='white').place(x=15, y=195)
 money_label = Label(tk_obj, font=("微軟正黑體", 16), text='$0.00', fg='gray25', bg='white')
-money_label.place(x=160, y=195)
+money_label.place(x=125, y=195)
 # 新增「每秒賺多少錢」顯示
 per_sec_label = Label(tk_obj, font=("微軟正黑體", 10), text='$0.00/sec', fg='gray40', bg='white')
-per_sec_label.place(x=270, y=205)
+per_sec_label.place(x=235, y=205)
 
 def toggle_per_sec():
     global show_per_sec
     show_per_sec = not show_per_sec
     if show_per_sec:
-        per_sec_label.place(x=270, y=205)  # 再放回去
+        per_sec_label.place(x=235, y=205)  # 再放回去
         toggle_btn.config(text='隱藏每秒')
     else:
         per_sec_label.place_forget()  # 隱藏
         toggle_btn.config(text='顯示每秒')
 
 toggle_btn = Button(tk_obj, text='隱藏每秒', font=("微軟正黑體", 8), command=toggle_per_sec)
-toggle_btn.place(x=342, y=204)
+toggle_btn.place(x=307, y=204)
 
-Label(tk_obj, text='加班：', font=FONT_BOLD, bg='white').place(x=50, y=230)
+Label(tk_obj, text='加班：', font=FONT_BOLD, bg='white').place(x=15, y=230)
 btn_frame = Frame(tk_obj, bg='white')
-btn_frame.place(x=110, y=230)
+btn_frame.place(x=75, y=230)
 
 ot_hours = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
 ot_buttons = []
@@ -529,18 +529,18 @@ for i, h in enumerate(ot_hours):
     relief="flat",
     command=toggle_turbo
 )
-turbo_btn.place(x=112, y=300)
+turbo_btn.place(x=77, y=300)
 start_btn = Button(tk_obj, text='START', bd=5, command=start_all,
                    bg='#4CAF50', fg='white', font=FONT_BUTTON, relief='flat')
-start_btn.place(x=140, y=340)
+start_btn.place(x=105, y=340)
 
 clean_btn = Button(tk_obj, text='CLEAN', bd=5, command=clean_and_start,
                    bg='#f57c00', fg='white', font=FONT_BUTTON, relief='flat')
-clean_btn.place(x=220, y=340)
+clean_btn.place(x=185, y=340)
 
 progress_var = IntVar()
 progress_bar = ttk.Progressbar(tk_obj, orient=HORIZONTAL, length=300, mode='determinate', variable=progress_var)
-progress_bar.place(x=60, y=390)
+progress_bar.place(x=30, y=390)
 
 def update_cross_day_label():
     # 判斷是否跨日
