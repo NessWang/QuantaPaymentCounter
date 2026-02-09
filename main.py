@@ -259,8 +259,12 @@ def set_overtime(hour, button):
     # 將之前選的按鈕還原顏色
     if selected_ot_button:
         selected_ot_button.config(bg='#4CAF50')
-    # 把目前選的按鈕設成深綠色
-    button.config(bg='#00e600')
+    # === 依加班時數決定「選中後」顏色 ===
+    if hour > 4.0:
+        button.config(bg='#d32f2f')   # 超過 4 小時 → 紅色
+    else:
+        button.config(bg='#00e600')   # 一般 → 亮綠色
+
     selected_ot_button = button
 
     try:
