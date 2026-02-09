@@ -445,16 +445,32 @@ Label(tk_obj, text='加班：', font=FONT_BOLD, bg='white').place(x=50, y=230)
 btn_frame = Frame(tk_obj, bg='white')
 btn_frame.place(x=110, y=230)
 
-ot_hours = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0]
+ot_hours = [1.0, 1.5, 2.0, 2.5, 3.0, 3.5, 4.0, 4.5, 5.0]
 ot_buttons = []
 for i, h in enumerate(ot_hours):
     def make_lambda(hh=h, btn_idx=i):
         return lambda: set_overtime(hh, ot_buttons[btn_idx])
-    btn = Button(btn_frame, text=f"+{h}h", width=5,
-                 font=FONT_BUTTON,
-                 bg='#4CAF50', fg='white', relief='flat')
+
+    btn = Button(
+        btn_frame,
+        text=f"+{h}h",
+        width=5,
+        font=FONT_BUTTON,
+        bg='#4CAF50',
+        fg='white',
+        relief='flat'
+    )
     btn.config(command=make_lambda())
-    btn.grid(row=i // 4, column=i % 4, padx=2, pady=2)
+
+    # ===== 排版規則 =====
+    if i < 4:
+        row = 0
+        col = i
+    else:
+        row = 1
+        col = i - 4
+
+    btn.grid(row=row, column=col, padx=2, pady=2)
     ot_buttons.append(btn)
 
 start_btn = Button(tk_obj, text='START', bd=5, command=start_all,
