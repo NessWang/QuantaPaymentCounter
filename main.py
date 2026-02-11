@@ -419,14 +419,14 @@ tk_obj.iconbitmap(resource_path("assets/Dog.ico"))  # 請自行放置icon路徑�
 
 # 美化圓形指示燈，改用 Canvas
 led_canvas = Canvas(tk_obj, width=20, height=20, bg='white', highlightthickness=0)
-led_canvas.place(x=17, y=10)
+led_canvas.place(x=10, y=5)
 led_circle = led_canvas.create_oval(2, 2, 18, 18, fill='green', outline='gray')
 
 def set_led_color(color):
     led_canvas.itemconfig(led_circle, fill=color)
 
 shutdown_label = Label(tk_obj, text='', font=('微軟正黑體', 10), fg='red', bg='white')
-shutdown_label.place(x=0, y=8)
+shutdown_label.place(x=10, y=28)
 
 Label(tk_obj, text='下班倒數計時', font=FONT_BOLD_LARGE, bg='white').pack()
 Label(tk_obj, font=FONT_BOLD, text='當前時間：', bg='white').place(x=15, y=50)
